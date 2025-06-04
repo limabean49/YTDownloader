@@ -9,7 +9,7 @@ class GUI:
 
         self.main = Tk()
         self.main.geometry('1280x720')
-        self.main.title("YouTube Video Downloader")
+        self.main.title("YT Downloader")
         self.inputPage()
 
     def inputPage(self):
@@ -39,6 +39,9 @@ class GUI:
         
         self.back = Button(self.main, text="Back", font=("Helvetica", 20),  command=self.inputPage)
         self.back.place(relx=0.1, rely=0.9, anchor=CENTER)
+        
+        self.text = Label(self.main, text="Choose settings for download:", font=("Helvetica", 20))
+        self.text.pack()
 
     def buttonClicked(self):
         input = self.entry.get()
