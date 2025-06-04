@@ -5,7 +5,7 @@ class App:
     def __init__(self):
         self.gui = GUI(callback=self.onSubmit)
 
-    def onSubmit(self, input):
+    def onSubmit(self: GUI, input: str):
         video = importer.requestVideo(input)
         self.gui.updateSelectedVideo(title=video["title"], thumbnail=video["thumbnail"])
 

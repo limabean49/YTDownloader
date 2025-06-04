@@ -36,7 +36,7 @@ class GUI:
         self.submitButton = CTkButton(self.entryFrame, text="Submit", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.buttonClicked)
         self.submitButton.pack(pady=20)
 
-        # Middle splitter frame
+        # Middle content frame
         self.contentFrame = CTkFrame(self.main,corner_radius=32)
         self.contentFrame.pack(side="top", fill="both", expand=True, padx=20, pady=10)
 
