@@ -1,0 +1,58 @@
+from tkinter import *
+import requests
+from PIL import ImageTk, Image
+from io import BytesIO
+
+class GUI:
+    def __init__(self, callback):
+        self.callback = callback
+
+        self.main = Tk()
+        self.main.geometry('1280x720')
+        self.main.title("YouTube Video Downloader")
+        self.inputPage()
+
+    def inputPage(self):
+        for i in self.main.winfo_children():
+            i.destroy()
+
+        self.text = Label(self.main, text="Enter a YouTube video link to download:", font=("Helvetica", 20))
+        self.text.pack()
+
+        self.entry = Entry(self.main, width=40, font=("Arial", 14))
+        self.entry.pack(pady=20)
+
+        self.submitButton = Button(self.main, text="Submit", font=("Helvetica", 20), command=self.buttonClicked)
+        self.submitButton.pack(pady=20)
+
+        self.label = Label(self.main, text="", font=("Helvetica", 20))
+        self.label.pack()
+
+        self.image = Label(self.main)
+        self.image.pack()
+
+        self.download = Button(self.main, text="Next", font=("Helvetica", 20),  command=self.downloadPage)
+
+    def downloadPage(self):
+        for i in self.main.winfo_children():
+            i.destroy()
+        
+        self.back = Button(self.main, text="Back", font=("Helvetica", 20),  command=self.inputPage)
+        self.back.place(relx=0.1, rely=0.9, anchor=CENTER)
+
+    def buttonClicked(self):
+        input = self.entry.get()
+        self.callback(input)
+
+    def updateSelectedVideo(self, title, thumbnail):
+        self.label.config(text=title)
+        image = Image.open(BytesIO(requests.get(url=thumbnail).content))
+        image = image.crop((0, 60, 640, 420))
+        self.photo = ImageTk.PhotoImage(image)
+
+        self.image.config(image=self.photo)
+
+        self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
+
+    def run(self):
+        self.main.mainloop()
