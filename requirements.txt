@@ -1,0 +1,4 @@
+pytubefix
+customtkinter
+requests
+Pillow
