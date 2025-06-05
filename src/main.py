@@ -7,7 +7,11 @@ class App:
 
     def onSubmit(self: GUI, input: str):
         video = importer.requestVideo(input)
-        self.gui.updateSelectedVideo(title=video["title"], thumbnail=video["thumbnail"])
+        self.gui.updateSelectedVideo(title=video["title"],
+                                      thumbnail=video["thumbnail"],
+                                      views=video["views"],
+                                      length=video["length"],
+                                      uploadDate=video["uploadDate"])
 
     def run(self):
         self.gui.run()

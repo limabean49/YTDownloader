@@ -13,7 +13,6 @@ class GUI:
         self.video = ""
         set_appearance_mode("dark")
 
-        self.main.bind("<Configure>", self.onResize)
 
         self.inputPage()
 
@@ -21,8 +20,13 @@ class GUI:
         for i in self.main.winfo_children():
             i.destroy()
 
+        # Frame for input page
+        self.inputPageFrame = CTkFrame(self.main)
+        self.inputPageFrame.pack(side="top", fill="both", expand=True)
+        self.inputPageFrame.bind("<Configure>", self.onResize)
+
         # Top: entry frame
-        self.entryFrame = CTkFrame(self.main, corner_radius=32)
+        self.entryFrame = CTkFrame(self.inputPageFrame, corner_radius=32)
         self.entryFrame.pack(side="top", fill="x", expand=False, padx=20, pady=10)
 
         self.text = CTkLabel(self.entryFrame, text="Enter a YouTube video link to download:", font=("Helvetica", 20))
@@ -37,7 +41,7 @@ class GUI:
         self.submitButton.pack(pady=20)
 
         # Middle content frame
-        self.contentFrame = CTkFrame(self.main,corner_radius=32)
+        self.contentFrame = CTkFrame(self.inputPageFrame,corner_radius=32)
         self.contentFrame.pack(side="top", fill="both", expand=True, padx=20, pady=10)
 
         # Left: image frame
@@ -54,16 +58,20 @@ class GUI:
         self.label = CTkLabel(self.labelFrame, text=" ", font=("Helvetica", 20), wraplength=400, corner_radius=32)
         self.label.pack(fill="both", expand=True)
 
-        self.download = CTkButton(self.main, text="Next", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.downloadPage)
+        self.download = CTkButton(self.inputPageFrame, text="Next", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.downloadPage)
 
     def downloadPage(self):
         for i in self.main.winfo_children():
             i.destroy()
         
-        self.back = CTkButton(self.main, text="Back", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.inputPage)
-        self.back.place(relx=0.15, rely=0.9, anchor=CENTER)
         
-        self.text = CTkLabel(self.main, text="Choose settings for download:", font=("Helvetica", 20))
+        self.downloadFrame = CTkFrame(self.main, corner_radius=32)
+        self.downloadFrame.pack(side="top", fill="both", expand=True, padx=20, pady=10)
+
+        self.back = CTkButton(self.downloadFrame, text="Back", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.inputPage)
+        self.back.place(relx=0.1, rely=0.9, anchor=CENTER)
+
+        self.text = CTkLabel(self.downloadFrame, text="Choose settings for download:", font=("Helvetica", 20))
         self.text.pack(pady=10)
 
     def buttonClicked(self):
@@ -71,14 +79,15 @@ class GUI:
         self.video = self.entry.get().split("&")[0]
         self.callback(input)
 
-    def updateSelectedVideo(self, title, thumbnail):
-        self.label.configure(text=title)
+    def updateSelectedVideo(self, title, thumbnail, views, length, uploadDate):
+        self.label.configure(text=(f"{title} \n\n{views:,} views - {length // 60 // 60}:{length // 60 % 60}:{length % 60} - Upload Date: {uploadDate}"))
 
         ctkimage = Image.open(BytesIO(requests.get(url=thumbnail).content))
         ctkimage = CTkImage(ctkimage.crop((0, 60, 640, 420)), size=(640, 360))
 
         self.imageLabel.configure(image=ctkimage, text="")
         self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
+        self.onResize(None)  # Adjust label size immediately
 
         print(self.video)
 
