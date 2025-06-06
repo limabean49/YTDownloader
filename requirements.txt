@@ -2,3 +2,4 @@ pytubefix
 customtkinter
 requests
 Pillow
+ffmpeg-python

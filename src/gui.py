@@ -168,7 +168,12 @@ class GUI:
         else:
             self.progressBar.set(1.0)
             self.completeText = CTkLabel(self.downloadFrame, text=f"Download complete at {file_path} ! :)", font=("Helvetica", 16))
+            self.statusLabel = CTkLabel(self.downloadFrame, text=f"Combining video and audio...", font=("Helvetica", 16))
+            self.statusLabel.place(relx=0.5, rely=0.85, anchor=CENTER)
         self.completeText.place(relx=0.5, rely=0.8, anchor=CENTER)
+    
+    def combineText(self, text):
+        self.statusLabel.configure(text=text)
 
     def cancelDownload(self):
         self.cancelRequested = True

@@ -2,7 +2,7 @@ from pytubefix import YouTube
 import threading
 
 class YouTubeVideo:
-    def __init__(self, url: str, onProgress=None, onComplete=None, failCallback=None) -> None:
+    def __init__(self, url: str, onProgress=None, onComplete=None, failCallback=None, finishCallback=None) -> None:
         try:
             self.yt = YouTube(url)
             if onProgress:
@@ -10,6 +10,7 @@ class YouTubeVideo:
             if onComplete:
                 self.yt.register_on_complete_callback(onComplete)
             self.failCallback = failCallback
+            self.finishCallback = finishCallback
         except:
             self.yt = None
 
@@ -39,7 +40,8 @@ class YouTubeVideo:
 
     def startDownload(self, videoitag, audioitag):
         try:
-            self.yt.streams.get_by_itag(videoitag).download()
-            self.yt.streams.get_by_itag(audioitag).download()
+            self.yt.streams.get_by_itag(videoitag).download(filename="YTvideo.mp4")
+            self.yt.streams.get_by_itag(audioitag).download(filename="YTaudio.mp4")
+            self.finishCallback()
         except:
             self.failCallback()
