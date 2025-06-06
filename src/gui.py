@@ -12,6 +12,8 @@ class GUI:
         self.main.title("YT Downloader")
         self.video = ""
         set_appearance_mode("dark")
+        self.ctkimage = None
+        self.info = None
 
         self.inputPage()
 
@@ -47,18 +49,30 @@ class GUI:
         self.imageFrame = CTkFrame(self.contentFrame, corner_radius=32)
         self.imageFrame.pack(side="left", fill="both", expand=True, padx=(0, 10))
 
-        self.imageLabel = CTkLabel(self.imageFrame, text="Thumbnail will appear here")
+        if self.ctkimage:
+            self.imageLabel = CTkLabel(self.imageFrame, image=self.ctkimage, text="")
+        else:
+            self.imageLabel = CTkLabel(self.imageFrame, text="Thumbnail will appear here")
         self.imageLabel.pack(expand=True)
 
         # Right: text frame
         self.labelFrame = CTkFrame(self.contentFrame, corner_radius=32)
         self.labelFrame.pack(side="left", fill="both", expand=True)
 
-        self.label = CTkLabel(self.labelFrame, text=" ", font=("Helvetica", 20), wraplength=400, corner_radius=32)
-        self.label.pack(fill="both", expand=True)
+        if self.info:
+            self.label = CTkLabel(self.labelFrame, text=self.info, font=("Helvetica", 20), wraplength=400, corner_radius=32)
+            self.label.pack(fill="both", expand=True)
+            self.label.bind("<Configure>", self.onResize)
+            self.onResize(None) # Adjust label size immediately
+        else:
+            self.label = CTkLabel(self.labelFrame, text=" ", font=("Helvetica", 20), wraplength=400, corner_radius=32)
+            self.label.bind("<Configure>", self.onResize)
+            self.label.pack(fill="both", expand=True)
 
         self.download = CTkButton(self.inputPageFrame, text="Next", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.downloadPage)
-
+        if self.info:
+            self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
+            
     def downloadPage(self) -> None:
         for i in self.main.winfo_children():
             i.destroy()
@@ -85,12 +99,13 @@ class GUI:
         self.callback(input)
 
     def updateSelectedVideo(self, title: str, thumbnail: str, views: str, length: str, uploadDate: str) -> None:
-        self.label.configure(text=(f"{title} \n\n{views} views - {length} - Upload Date: {uploadDate}"))
+        self.info = f"{title} \n\n{views} views - {length} - Upload Date: {uploadDate}"
+        self.label.configure(text=self.info)
 
-        ctkimage = Image.open(BytesIO(requests.get(url=thumbnail).content))
-        ctkimage = CTkImage(ctkimage.crop((0, 60, 640, 420)), size=(640, 360))
+        self.ctkimage = Image.open(BytesIO(requests.get(url=thumbnail).content))
+        self.ctkimage = CTkImage(self.ctkimage.crop((0, 60, 640, 420)), size=(640, 360))
 
-        self.imageLabel.configure(image=ctkimage, text="")
+        self.imageLabel.configure(image=self.ctkimage, text="")
         self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
         self.onResize(None)  # Adjust label size immediately
 

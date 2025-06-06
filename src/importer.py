@@ -26,3 +26,6 @@ class YouTubeVideo:
     
     def getStreams(self) -> list:
         return self.yt.streams
+    
+    def download():
+        pass
