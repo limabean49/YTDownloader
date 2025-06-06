@@ -1,7 +1,7 @@
 from pytubefix import YouTube
 
 class YouTubeVideo:
-    def __init__(self, url) -> None:
+    def __init__(self, url: str) -> None:
         try:
             self.yt = YouTube(url)
         except:

@@ -2,7 +2,6 @@ from customtkinter import *
 import requests
 from PIL import ImageTk, Image
 from io import BytesIO
-from collections import OrderedDict
 
 class GUI:
     def __init__(self, callback) -> None:
