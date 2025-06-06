@@ -29,11 +29,12 @@ class App:
         self.gui.completeCallback(None, None)
 
     def combineFiles(self):
-        videoFilename = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", self.yt.getValues()["title"] + "video.mp4")
-        audioFilename = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", self.yt.getValues()["title"] + "audio.mp4")
-        outputFilename = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", self.yt.getValues()["title"]) + ".mp4")
+        videoTitle = self.yt.getValues()["title"]
+        videoFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + "video.mp4")
+        audioFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + "audio.mp4")
+        outputFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + ".mp4")
 
-        combine.combineFiles(videoFilename, audioFilename, outputFilename, self.gui)
+        combine.combineFiles(videoFileName, audioFileName, outputFileName, self.gui)
 
 if __name__ == "__main__":
     app = App()

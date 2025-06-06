@@ -2,7 +2,7 @@ from pytubefix import YouTube
 import threading
 
 class YouTubeVideo:
-    def __init__(self, url: str, onProgress=None, onComplete=None, failCallback=None, finishCallback=None) -> None:
+    def __init__(self, url: str, onProgress = None, onComplete = None, failCallback = None, finishCallback = None) -> None:
         try:
             self.yt = YouTube(url)
             if onProgress:
@@ -11,7 +11,8 @@ class YouTubeVideo:
                 self.yt.register_on_complete_callback(onComplete)
             self.failCallback = failCallback
             self.finishCallback = finishCallback
-        except:
+        except Exception as e:
+            print(f"Error initializing YouTube object: {e}")
             self.yt = None
 
     def getValues(self) -> dict:
@@ -34,14 +35,17 @@ class YouTubeVideo:
     def getStreams(self) -> list:
         return self.yt.streams
     
-    def downloadVideo(self, videoInput, audioInput):
+    def downloadVideo(self, videoInput: int, audioInput: int) -> None:
         thread = threading.Thread(target=self.startDownload, args=(videoInput, audioInput), daemon=True)
         thread.start()
 
-    def startDownload(self, videoitag, audioitag):
+    def startDownload(self, videoitag: int, audioitag: int) -> None:
         try:
             self.yt.streams.get_by_itag(videoitag).download(filename="YTvideo.mp4")
             self.yt.streams.get_by_itag(audioitag).download(filename="YTaudio.mp4")
-            self.finishCallback()
-        except:
-            self.failCallback()
+            if self.finishCallback:
+                self.finishCallback()
+        except Exception as e:
+            print(f"Download failed: {e}")
+            if self.failCallback:
+                self.failCallback()

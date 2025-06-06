@@ -11,8 +11,8 @@ class GUI:
         self.main = CTk()
         self.main.geometry('1280x720')
         self.main.title("YT Downloader")
-        self.video = ""
-        self.cancelRequested = False
+        self.video: str = ""
+        self.cancelRequested: bool = False
         set_appearance_mode("dark")
 
         self.ctkimage = None

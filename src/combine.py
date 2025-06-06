@@ -3,7 +3,7 @@ import os
 import threading
 from gui import GUI
 
-def combineFiles(videoPath: str, audioPath, outputPath: str, gui) -> None:
+def combineFiles(videoPath: str, audioPath: str, outputPath: str, gui: GUI) -> None:
     def task():
         try:
             ffmpeg.output(
