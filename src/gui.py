@@ -2,9 +2,10 @@ from customtkinter import *
 import requests
 from PIL import ImageTk, Image
 from io import BytesIO
+from collections import OrderedDict
 
 class GUI:
-    def __init__(self, callback):
+    def __init__(self, callback) -> None:
         self.callback = callback
 
         self.main = CTk()
@@ -13,10 +14,9 @@ class GUI:
         self.video = ""
         set_appearance_mode("dark")
 
-
         self.inputPage()
 
-    def inputPage(self):
+    def inputPage(self) -> None:
         for i in self.main.winfo_children():
             i.destroy()
 
@@ -60,11 +60,11 @@ class GUI:
 
         self.download = CTkButton(self.inputPageFrame, text="Next", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.downloadPage)
 
-    def downloadPage(self):
+    def downloadPage(self) -> None:
         for i in self.main.winfo_children():
             i.destroy()
         
-        
+        # Frame for download options
         self.downloadFrame = CTkFrame(self.main, corner_radius=32)
         self.downloadFrame.pack(side="top", fill="both", expand=True, padx=20, pady=10)
 
@@ -74,13 +74,19 @@ class GUI:
         self.text = CTkLabel(self.downloadFrame, text="Choose settings for download:", font=("Helvetica", 20))
         self.text.pack(pady=10)
 
-    def buttonClicked(self):
+        self.videoDropdown = CTkComboBox(self.downloadFrame, width=350, corner_radius=10, values=[label for label, string in self.videoOptions])
+        self.videoDropdown.place(relx=0.3, rely=0.15, anchor=CENTER)
+
+        self.audioDropdown = CTkComboBox(self.downloadFrame, width=350, corner_radius=10, values=[label for label, string in self.audioOptions])
+        self.audioDropdown.place(relx=0.7, rely=0.15, anchor=CENTER)
+
+    def buttonClicked(self) -> None:
         input = self.entry.get()
         self.video = self.entry.get().split("&")[0]
         self.callback(input)
 
-    def updateSelectedVideo(self, title, thumbnail, views, length, uploadDate):
-        self.label.configure(text=(f"{title} \n\n{views:,} views - {length // 60 // 60}:{length // 60 % 60}:{length % 60} - Upload Date: {uploadDate}"))
+    def updateSelectedVideo(self, title: str, thumbnail: str, views: str, length: str, uploadDate: str) -> None:
+        self.label.configure(text=(f"{title} \n\n{views} views - {length} - Upload Date: {uploadDate}"))
 
         ctkimage = Image.open(BytesIO(requests.get(url=thumbnail).content))
         ctkimage = CTkImage(ctkimage.crop((0, 60, 640, 420)), size=(640, 360))
@@ -89,11 +95,22 @@ class GUI:
         self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
         self.onResize(None)  # Adjust label size immediately
 
-        print(self.video)
+    def configureStreams(self, streams) -> None:
+        self.videoOptions = []
+        self.audioOptions = []
 
-    def onResize(self, event):
+        for stream in streams:
+            if not stream.is_progressive:
+                if stream.resolution:
+                    label = f"Video: {stream.resolution} - {stream.fps}fps - Codec: {stream.codecs[0]} ({stream.mime_type[6:]})"
+                    self.videoOptions.append((label, stream))
+                else:
+                    label = f"Audio: {stream.abr} - Codec: {stream.codecs[0]}"
+                    self.audioOptions.append((label, stream))
+    
+    def onResize(self, event) -> None:
         width = self.label.winfo_width()
         self.label.configure(wraplength=(width - 20))
 
-    def run(self):
+    def run(self) -> None:
         self.main.mainloop()
