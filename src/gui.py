@@ -12,6 +12,7 @@ class GUI:
         self.main.title("YT Downloader")
         self.video = ""
         set_appearance_mode("dark")
+        
         self.ctkimage = None
         self.info = None
 
@@ -72,7 +73,7 @@ class GUI:
         self.download = CTkButton(self.inputPageFrame, text="Next", font=("Helvetica", 20), corner_radius=32, hover_color="#3b63f1", command=self.downloadPage)
         if self.info:
             self.download.place(relx=0.9, rely=0.9, anchor=CENTER)
-            
+
     def downloadPage(self) -> None:
         for i in self.main.winfo_children():
             i.destroy()
