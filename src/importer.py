@@ -1,9 +1,15 @@
 from pytubefix import YouTube
+import threading
 
 class YouTubeVideo:
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, onProgress=None, onComplete=None, failCallback=None) -> None:
         try:
             self.yt = YouTube(url)
+            if onProgress:
+                self.yt.register_on_progress_callback(onProgress)
+            if onComplete:
+                self.yt.register_on_complete_callback(onComplete)
+            self.failCallback = failCallback
         except:
             self.yt = None
 
@@ -27,5 +33,13 @@ class YouTubeVideo:
     def getStreams(self) -> list:
         return self.yt.streams
     
-    def download():
-        pass
+    def downloadVideo(self, videoInput, audioInput):
+        thread = threading.Thread(target=self.startDownload, args=(videoInput, audioInput), daemon=True)
+        thread.start()
+
+    def startDownload(self, videoitag, audioitag):
+        try:
+            self.yt.streams.get_by_itag(videoitag).download()
+            self.yt.streams.get_by_itag(audioitag).download()
+        except:
+            self.failCallback()
