@@ -13,3 +13,6 @@ git clone https://github.com/limabean49/YTDownloader.git
 cd YTDownloader
 pip install -r requirements.txt
 python src/main.py
+```
+
+Alternatively, you can download the .exe from [releases](https://github.com/limabean49/YTDownloader/releases/tag/v1.0.0).
