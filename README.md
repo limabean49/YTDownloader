@@ -1,10 +1,10 @@
 # YTDownloader
 
-A (WIP) Program made with customtkinter and pytubefix that makes it easy to download YouTube videos.
+A simple YouTube video downloader made with customtkinter and pytubefix that makes it easy to download YouTube videos.
 
 ## Features
-- Paste a YouTube link and view video info
-- Choose audio and video quality and download
+- Paste a YouTube link and view video info with preview of thumbnail, views, etc.
+- Choose audio and video quality, codec and download both individual audio and video files in addtion to a combined file
 
 ## Installation
 
