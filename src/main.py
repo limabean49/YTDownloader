@@ -31,7 +31,10 @@ class App:
     def combineFiles(self):
         videoTitle = self.yt.getValues()["title"]
         videoFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + "video.mp4")
-        audioFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + "audio.mp4")
+
+        audioExt = os.path.splitext(self.yt.audioFilePath)[1] if hasattr(self.yt, 'audioFilePath') else ".mp4"
+        audioFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + "audio" + audioExt)
+        
         outputFileName = os.path.join(".", re.sub(r'[\\/*?:"<>|]', "", videoTitle) + ".mp4")
 
         combine.combineFiles(videoFileName, audioFileName, outputFileName, self.gui)

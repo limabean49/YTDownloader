@@ -17,6 +17,7 @@ class GUI:
 
         self.ctkimage = None
         self.info = None
+        self.downloadState = False
 
         self.inputPage()
 
@@ -167,10 +168,14 @@ class GUI:
             self.completeText = CTkLabel(self.downloadFrame, text=f"Download cancelled by user", font=("Helvetica", 14))
         else:
             self.progressBar.set(1.0)
-            self.completeText = CTkLabel(self.downloadFrame, text=f"Download complete at {file_path} ! :)", font=("Helvetica", 16))
-            self.statusLabel = CTkLabel(self.downloadFrame, text=f"Combining video and audio...", font=("Helvetica", 16))
+        if self.downloadState:
+            head, tail = os.path.split(file_path)
+            self.completeText = CTkLabel(self.downloadFrame, text=f"Download complete at {head} ! :)", font=("Helvetica", 16))
+            self.statusLabel = CTkLabel(self.downloadFrame, text=f"Combining video and audio... (may take a minute for long videos)", font=("Helvetica", 16))
             self.statusLabel.place(relx=0.5, rely=0.85, anchor=CENTER)
-        self.completeText.place(relx=0.5, rely=0.8, anchor=CENTER)
+            self.completeText.place(relx=0.5, rely=0.8, anchor=CENTER)
+        else:
+            self.downloadState = True
     
     def combineText(self, text):
         self.statusLabel.configure(text=text)

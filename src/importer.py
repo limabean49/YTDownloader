@@ -1,5 +1,6 @@
 from pytubefix import YouTube
 import threading
+import re
 
 class YouTubeVideo:
     def __init__(self, url: str, onProgress = None, onComplete = None, failCallback = None, finishCallback = None) -> None:
@@ -41,8 +42,8 @@ class YouTubeVideo:
 
     def startDownload(self, videoitag: int, audioitag: int) -> None:
         try:
-            self.yt.streams.get_by_itag(videoitag).download(filename="YTvideo.mp4")
-            self.yt.streams.get_by_itag(audioitag).download(filename="YTaudio.mp4")
+            self.yt.streams.get_by_itag(videoitag).download(filename=(re.sub(r'[\\/*?:"<>|]', "", self.yt.title + " - " + self.yt.author) + "video.mp4"))
+            self.yt.streams.get_by_itag(audioitag).download(filename=(re.sub(r'[\\/*?:"<>|]', "", self.yt.title + " - " + self.yt.author) + "audio.mp4"))
             if self.finishCallback:
                 self.finishCallback()
         except Exception as e:
